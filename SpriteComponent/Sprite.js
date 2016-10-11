@@ -1,5 +1,5 @@
-// Sprite component bridged with native component (react-native 0.29)
-// By William Ngan, 7/2016
+// Sprite component bridged with native component (react-native 0.34)
+// By William Ngan, 10/2016
 
 import React, { Component } from 'react';
 import { requireNativeComponent, NativeModules, findNodeHandle } from 'react-native';
