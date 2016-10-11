@@ -12,7 +12,7 @@ class SpriteManager : RCTViewManager {
   // This is a function that bridges the one from Sprite.swift
   // No idea what's reactTag, but it's needed to find the view
   // Remember to import "RCTUIManager.h" in the Bridging-Header.h
-  @objc func createSequence(reactTag: NSNumber, nameWithPath:String, count:Int, format: String, duration: Double) {
+  @objc func createSequence(_ reactTag: NSNumber, nameWithPath:String, count:Int, format: String, duration: Double) {
 
     // Let's start with some spaghetti to get a view!
     self.bridge!.uiManager.addUIBlock { (uiManager: RCTUIManager?, viewRegistry:[NSNumber : UIView]?) in
@@ -24,7 +24,7 @@ class SpriteManager : RCTViewManager {
   }
 
 
-  @objc func animate(reactTag: NSNumber, shouldPlay:Bool ) {
+  @objc func animate(_ reactTag: NSNumber, shouldPlay:Bool ) {
 
     // Let's start with some spaghetti to get a view!
     self.bridge!.uiManager.addUIBlock { (uiManager: RCTUIManager?, viewRegistry:[NSNumber : UIView]?) in
