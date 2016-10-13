@@ -7,7 +7,7 @@ import UIKit
 
 // This is the actual View in swift that we want to bridge to javascript
 
-public class Sprite: UIView {
+open class Sprite: UIView {
   override public init(frame: CGRect) {
     super.init(frame: frame)
     
@@ -29,7 +29,7 @@ public class Sprite: UIView {
     fatalError( "init(coder:) has not been implemented" )
   }
   
-  public var sprite:UIImageView?
+  open var sprite:UIImageView?
   
   
   /**
@@ -39,33 +39,23 @@ public class Sprite: UIView {
    and files like "rider0.png", "rider1.png", etc inside
    imageName should be "riderFolder/rider"
    */
-  public var imageName: String = ""
+  open var imageName: String = ""
   
   
   /**
    Set sprite's animationRepeatCount when it's animating
-  */
-  public var _repeatCount: Int = 0;
+   */
+  open var repeatCount: Int = 0;
   
-  public func setRepeatCount( n: Int ) {
-    print("repeat", n)
-    if n >= 0 && n != sprite!.animationRepeatCount {
-      sprite!.animationRepeatCount = n
-
-      if _animated {
-        sprite!.startAnimating()
-      }
-    }
-  }
-
+  
   /**
-    Image Number property
-    This is used to control which image to display by its index
-  */
-  private var _imageNumber: Int = 0
-
+   Image Number property
+   This is used to control which image to display by its index
+   */
+  fileprivate var _imageNumber: Int = 0
+  
   // bridge for React property setter
-  public func setImageNumber( n: Int ) {
+  open func setImageNumber( _ n: Int ) {
     
     _imageNumber = n
     if !sprite!.isAnimating && seq != nil {
@@ -83,22 +73,22 @@ public class Sprite: UIView {
    Animated property
    Controls whether the images should be played
    */
-  private var _animated: Bool = false
+  fileprivate var _animated: Bool = false
   
-  public func animate( shouldPlay: Bool ) {
-    setAnimated(shouldPlay: shouldPlay)
+  open func animate( _ shouldPlay: Bool ) {
+    setAnimated(shouldPlay)
   }
   
   // bridge for React property setter
-  public func setAnimated( shouldPlay:Bool ) {
+  open func setAnimated( _ shouldPlay:Bool ) {
     _animated = shouldPlay
     
     if _animated != sprite!.isAnimating {
       if shouldPlay {
         sprite!.animationImages = seq
-        sprite!.animationRepeatCount = _repeatCount
+        sprite!.animationRepeatCount = repeatCount
         sprite!.startAnimating()
-
+        
       } else {
         sprite!.stopAnimating()
       }
@@ -107,13 +97,13 @@ public class Sprite: UIView {
   
   
   // storing both the css-style string and the contentMode enum for use in layoutSubViews etc
-  private var _imageLayout: String = "contain"
-  private var _contentMode: UIViewContentMode = UIViewContentMode.scaleAspectFit
+  fileprivate var _imageLayout: String = "contain"
+  fileprivate var _contentMode: UIViewContentMode = UIViewContentMode.scaleAspectFit
   
   /**
    Bridge UIImageView's contentMode to a css style string for React Native
-  */
-  public func setImageLayout( mode:String ) {
+   */
+  open func setImageLayout( _ mode:String ) {
     
     if mode == _imageLayout {
       return
@@ -122,34 +112,34 @@ public class Sprite: UIView {
     var c = UIViewContentMode.scaleAspectFit
     
     switch mode {
-      case "contain":
-        c = UIViewContentMode.scaleAspectFit
-      case "cover":
-        c = UIViewContentMode.scaleAspectFill
-      case "stretch":
-        c = UIViewContentMode.scaleToFill
-      case "redraw":
-        c = UIViewContentMode.redraw
-      case "center":
-        c = UIViewContentMode.center
-      case "top":
-        c = UIViewContentMode.top
-      case "bottom":
-        c = UIViewContentMode.bottom
-      case "left":
-        c = UIViewContentMode.left
-      case "right":
-        c = UIViewContentMode.right
-      case "topLeft", "top-left":
-        c = UIViewContentMode.topLeft
-      case "topRight", "top-right":
-        c = UIViewContentMode.topRight
-      case "bottomLeft", "bottom-left":
-        c = UIViewContentMode.bottomLeft
-      case "bottomRight", "bottom-right":
-        c = UIViewContentMode.bottomRight
-      default:
-        c = UIViewContentMode.scaleAspectFit
+    case "contain":
+      c = UIViewContentMode.scaleAspectFit
+    case "cover":
+      c = UIViewContentMode.scaleAspectFill
+    case "stretch":
+      c = UIViewContentMode.scaleToFill
+    case "redraw":
+      c = UIViewContentMode.redraw
+    case "center":
+      c = UIViewContentMode.center
+    case "top":
+      c = UIViewContentMode.top
+    case "bottom":
+      c = UIViewContentMode.bottom
+    case "left":
+      c = UIViewContentMode.left
+    case "right":
+      c = UIViewContentMode.right
+    case "topLeft", "top-left":
+      c = UIViewContentMode.topLeft
+    case "topRight", "top-right":
+      c = UIViewContentMode.topRight
+    case "bottomLeft", "bottom-left":
+      c = UIViewContentMode.bottomLeft
+    case "bottomRight", "bottom-right":
+      c = UIViewContentMode.bottomRight
+    default:
+      c = UIViewContentMode.scaleAspectFit
     }
     
     _imageLayout = mode
@@ -164,24 +154,24 @@ public class Sprite: UIView {
    This should match the number of images in your image sequence
    "rider0.png" ... "rider9.png" => 10 images
    */
-  public var count: Int = 10
+  open var count: Int = 10
   
   
   /**
    File format property
    Matches your image files' extension. "png" or "jpg" for example
-  */
-  public var format: String = "png"
+   */
+  open var format: String = "png"
   
   
   /**
    Duration property
    Set the number of seconds per full animated cycle
-  */
-  private var duration: Double = 0.5
+   */
+  fileprivate var duration: Double = 0.5
   
   // bridge to React property setter
-  public func setDuration( d:Double ) {
+  open func setDuration( _ d:Double ) {
     duration = d
     sprite!.animationDuration = duration
     
@@ -202,14 +192,16 @@ public class Sprite: UIView {
    - count: number of images
    - format: image files' extension, for example, "png" or "jpg"
    - duration: number of seconds per full animation cycle
-  */
-  public func createSequence( nameWithPath:String, count:Int, format: String, duration: Double) {
+   */
+  open func createSequence( _ nameWithPath:String, count:Int, format: String, duration: Double) {
+    
+    print(nameWithPath)
     
     self.imageName = nameWithPath
     self.count = count
     self.format = format
     self.duration = duration
-  
+    
     if count > 0 && !imageName.isEmpty {
       
       sprite!.image = UIImage(named: "\(imageName)0.\(format)")
@@ -218,6 +210,7 @@ public class Sprite: UIView {
       
       for i in 0...count {
         let n = "\(imageName)\(i).\(format)"
+        print(n);
         let image = UIImage(named: n)
         if image != nil {
           seq!.append( image! )
@@ -234,10 +227,10 @@ public class Sprite: UIView {
   
   
   // When the layout changes, update the UIImageView sprite sizes too
-  override public func layoutSubviews() {
+  override open func layoutSubviews() {
     sprite!.contentMode = _contentMode
     sprite!.frame = CGRect(x: 0, y:0, width: frame.width, height: frame.height)
   }
   
-
+  
 }
