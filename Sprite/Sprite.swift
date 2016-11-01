@@ -195,8 +195,6 @@ open class Sprite: UIView {
    */
   open func createSequence( _ nameWithPath:String, count:Int, format: String, duration: Double) {
     
-    print(nameWithPath)
-    
     self.imageName = nameWithPath
     self.count = count
     self.format = format
@@ -210,7 +208,6 @@ open class Sprite: UIView {
       
       for i in 0...count {
         let n = "\(imageName)\(i).\(format)"
-        print(n);
         let image = UIImage(named: n)
         if image != nil {
           seq!.append( image! )
