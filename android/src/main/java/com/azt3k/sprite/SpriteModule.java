@@ -47,40 +47,29 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-public class SpriteModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
-
-    private static final String TAG = "SpriteModule";
-
-//    private static ReactApplicationContext _reactContext;
+public class SpriteModule extends ReactContextBaseJavaModule {
 
     public SpriteModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
-
-//    public static ReactApplicationContext getReactContextSingleton() {
-//      return _reactContext;
-//    }
 
     @Override
     public String getName() {
         return "SpriteModule";
     }
 
-    /**
-     * LifecycleEventListener overrides
-     */
-    @Override
-    public void onHostResume() {
-        // ... do nothing
+    @ReactMethod
+    public void log(String message) {
+        Log.d("SpriteModule", message);
     }
 
-    @Override
-    public void onHostPause() {
+    @ReactMethod
+    public void createSequence(Float reactTag, String nameWithPath, Integer count, String format, Double duration) {
 
     }
 
-    @Override
-    public void onHostDestroy() {
-        // ... do nothing
+    @ReactMethod
+    public void animate(Float reactTag, Boolean shouldPlay) {
+
     }
 }
