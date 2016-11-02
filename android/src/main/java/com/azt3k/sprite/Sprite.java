@@ -1,16 +1,18 @@
 package com.azt3k.sprite;
 
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.content.Context;
 import android.graphics.Rect;
-//import android.view.ViewGroup;
 import android.opengl.GLSurfaceView;
-//import android.R;
+import android.graphics.PixelFormat;
 import android.util.Log;
 
 import com.twicecircled.spritebatcher.Drawer;
 import com.twicecircled.spritebatcher.SpriteBatcher;
 
-//import java.util.List;
+import java.util.ArrayList;
+import java.lang.Math;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -18,59 +20,199 @@ public class Sprite extends GLSurfaceView implements Drawer {
     // ViewGroup {
 
     private final Context _context;
+    private SpriteBatcher _renderer;
     private Rect sourceRect = new Rect(0, 0, 210, 240);
     private Rect destRect = new Rect(0, 0, 210, 240);
+    private int[] resourceIds;
+    private int imageNumber = 0;
+    private int repeatCount = 0;
+    private int sW = 0;
+    private int sH = 0;
+    private int dW = 0;
+    private int dH = 0;
+    private String imageLayout = "contain";
+    private boolean animated;
+    private double duration;
+    private int count = 0;
 
     public Sprite(Context context) {
+
         super(context);
         this._context = context;
 
-        // Log.d("Sprite", context.getPackageName());
+        // set transparent BG
+        // this.setZOrderOnTop(true);
+        // this.getHolder().setFormat(PixelFormat.TRANSPARENT);
+        //
+        // // set transparent bg?
+        // this.getHolder().setFormat(PixelFormat.RGB_888);
+        // this.setZOrderOnTop(false);
 
-        int[] resourceIds = new int[] {
-            context.getResources().getIdentifier("spins_pin_0", "drawable", context.getPackageName()),
-            context.getResources().getIdentifier("spins_pin_1", "drawable", context.getPackageName()),
-            context.getResources().getIdentifier("spins_pin_prize_1", "drawable", context.getPackageName())
-        };
 
-        // Log.d("Sprite", "" + resourceIds[2]);
-        // Log.d("Sprite", context.getResources().getResourceTypeName(resourceIds[0]));
-
-        this.setRenderer(new SpriteBatcher(context, resourceIds, this));
+        this.setEGLContextClientVersion(2);
+        this.setZOrderOnTop(true);
+        this.setEGLConfigChooser( 8, 8, 8, 8, 16, 0 );
+        this.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 
     }
 
     @Override
     public void onDrawFrame(GL10 gl, SpriteBatcher sb) {
+
+        if (this.resourceIds == null) return;
+        if (this.resourceIds.length < 1) return;
+
         sb.draw(
-                this._context.getResources().getIdentifier("spins_pin_0", "drawable", this._context.getPackageName()),
-                this.sourceRect,
-                this.destRect
+            this.resourceIds[this.imageNumber],
+            this.sourceRect,
+            this.destRect
         );
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-      // No-op since UIManagerModule handles actually laying out children.
+        if (changed) {
+            this.dW = right - left;
+            this.dH = bottom - top;
+            this.updateDestRect();
+        }
     }
 
-    public void setImageNumber(Integer imageNumber) {
+    protected void updateDestRect() {
 
+        // default = contain
+        // case "contain":
+        // case "cover":
+        // case "stretch":
+        // case "redraw":
+        // case "center":
+        // case "top":
+        // case "bottom":
+        // case "left":
+        // case "right":
+        // case "topLeft", "top-left":
+        // case "topRight", "top-right":
+        // case "bottomLeft", "bottom-left":
+        // case "bottomRight", "bottom-right":
+        switch (this.imageLayout) {
+            case "stretch":
+                this.destRect = new Rect(0, 0, this.dW, this.dH);
+                break;
+
+            case "cover":
+            case "redraw":
+            case "center":
+            case "top":
+            case "bottom":
+            case "left":
+            case "right":
+            case "topLeft":
+            case "top-left":
+            case "topRight":
+            case "top-right":
+            case "bottomLeft":
+            case "bottom-left":
+            case "bottomRight":
+            case "bottom-right":
+            case "contain":
+            default:
+
+                if (!this.imageLayout.equals("contain")) {
+                    Log.d("Sprite", "imageLayout " + this.imageLayout + " not implemented");
+                }
+
+                // init the vars
+                float sr = (float)this.sW / this.sH;
+                float dr = (float)this.dW / this.dH;
+                int nW;
+                int nH;
+
+                // scale to width
+                if (sr > dr) {
+                    nW = this.dW;
+                    nH = Math.round(this.sH * ((float)nW / this.sW));
+                }
+
+                // scale to height
+                else {
+                    nH = this.dH;
+                    nW = Math.round(this.sW * ((float)nH / this.sH));
+                }
+
+                // set the dest rect
+                this.destRect = new Rect(0, 0, nW, nH);
+                break;
+        }
     }
 
-    public void setRepeatCount(Integer repeatCount) {
+    public void setImageNumber(int imageNumber) {
 
+        // valid range
+        if (imageNumber > this.count - 1) imageNumber = this.count - 1;
+        if (imageNumber < 0) imageNumber = 0;
+
+        this.imageNumber = imageNumber;
+        // Log.d("Sprite", "imageNumber " + imageNumber);
+    }
+
+    public void setRepeatCount(int repeatCount) {
+        this.repeatCount = repeatCount;
+        // Log.d("Sprite", "repeatCount " + repeatCount);
     }
 
     public void setImageLayout(String imageLayout) {
-
+        this.imageLayout = imageLayout;
+        // Log.d("Sprite", "imageLayout " + imageLayout);
     }
 
-    public void setAnimated(Boolean animated) {
-
+    public void setAnimated(boolean animated) {
+        this.animated = animated;
+        // Log.d("Sprite", "animated " + animated);
     }
 
-    public void setDuration(Double duration) {
+    public void setDuration(double duration) {
+        this.duration = duration;
+        // Log.d("Sprite", "duration " + duration);
+    }
 
+    public void createSequence(String nameWithPath, int count, String format, double duration) {
+
+        // init the resource id array
+        int[] r = new int[count];
+
+        // build array
+        for (int i = 0; i < count; i++) {
+            r[i] = this._context.getResources().getIdentifier(
+                nameWithPath + i,
+                "drawable",
+                this._context.getPackageName()
+            );
+        }
+
+        // calc source rect - assumes all images are same dims
+        if (count > 0) {
+            final Options opt = new BitmapFactory.Options();
+            opt.inJustDecodeBounds = true;
+            BitmapFactory.decodeResource(
+                this._context.getResources(),
+                r[0],
+                opt
+            );
+            this.sW = opt.outWidth;
+            this.sH = opt.outHeight;
+            this.sourceRect = new Rect(0, 0, this.sW, this.sH);
+        }
+
+        // update this
+        this.resourceIds = r;
+        this.count = count;
+        this._renderer = new SpriteBatcher(this._context, this.resourceIds, this);
+
+        // set renderer
+        this.setRenderer(this._renderer);
+    }
+
+    public void animate(boolean shouldPlay) {
+        Log.d("SpriteModule", "animate: YES!!!");
     }
 }

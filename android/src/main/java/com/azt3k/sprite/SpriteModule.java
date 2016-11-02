@@ -64,12 +64,13 @@ public class SpriteModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createSequence(Float reactTag, String nameWithPath, Integer count, String format, Double duration) {
+    public void createSequence(Float reactTag, String nameWithPath, Integer count, String format, double duration) {
+        Log.d("SpriteModule", "createSequence: Can't get View from here - NOOP");
 
     }
 
     @ReactMethod
     public void animate(Float reactTag, Boolean shouldPlay) {
-
+        Log.d("SpriteModule", "animate: Can't get View from here - NOOP");
     }
 }

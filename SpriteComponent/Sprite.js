@@ -2,13 +2,13 @@
 // By William Ngan, 10/2016
 
 import React, { Component } from 'react';
-import { requireNativeComponent, NativeModules, findNodeHandle } from 'react-native';
+import { requireNativeComponent, NativeModules, findNodeHandle, Platform } from 'react-native';
 
 // refers to Sprite.swift we have in XCode
 const SpriteNative = requireNativeComponent('Sprite', Sprite);
 
 // refers to SpriteManager.swift
-const SpriteManager = NativeModules.SpriteManager;
+const SpriteManager = NativeModules.SpriteManager || NativeModules.SpriteModule;
 
 class Sprite extends Component {
 
@@ -18,15 +18,36 @@ class Sprite extends Component {
 
   }
 
-  // Bridge to Sprite.swift's function
   createSequence(nameWithPath, count, format, duration) {
-    // Use findNodeHandle from react-native.
-    SpriteManager.createSequence(findNodeHandle(this), nameWithPath, count || 1, format || "png", duration || 0.5);
+
+    let node = findNodeHandle(this),
+        args = [nameWithPath, count || 1, format || "png", duration || 0.5];
+
+    if (Platform.OS == 'ios')
+      SpriteManager.createSequence(node, ...args);
+
+    else
+      NativeModules.UIManager.dispatchViewManagerCommand(
+        node,
+        NativeModules.UIManager.Sprite.Commands.createSequence,
+        args
+      );
   }
 
-  // Bridge to Sprite.swift's function
-  animate( shouldPlay ) {
-    SpriteManager.animate( findNodeHandle(this), shouldPlay || false );
+  animate(shouldPlay) {
+
+    let node = findNodeHandle(this),
+        args = [shouldPlay || false ];
+
+    if (Platform.OS == 'ios')
+      SpriteManager.animate(findNodeHandle(this), ...args);
+
+    else
+      NativeModules.UIManager.dispatchViewManagerCommand(
+        node,
+        NativeModules.UIManager.Sprite.Commands.animate,
+        args
+      );
   }
 
   componentWillReceiveProps(nextProps) {

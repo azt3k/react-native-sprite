@@ -69,7 +69,7 @@ public class SpriteBatcher implements Renderer {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param resources
 	 * @param resourceIds
 	 *            valid resource ids are R.drawable.xxx for normal sprites or
@@ -86,7 +86,7 @@ public class SpriteBatcher implements Renderer {
 	/**
 	 * Constructor if using expansion apks. Need to provide expansion apk
 	 * version.
-	 * 
+	 *
 	 * @param resources
 	 * @param resourceIds
 	 *            valid resource ids are R.drawable.xxx for normal sprites or
@@ -227,8 +227,9 @@ public class SpriteBatcher implements Renderer {
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+
 		// SETTINGS
-		// Set the background color to black ( rgba ).
+		// Set the background color to fully transparent black ( rgba ).
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		// DRAWING SETUP
@@ -272,7 +273,7 @@ public class SpriteBatcher implements Renderer {
 	 * efficient and should be avoided where possible, by default sprites are
 	 * drawn in the order that you pass in the drawable resource ids in
 	 * SpriteBatcher's constructor.
-	 * 
+	 *
 	 * @param gl
 	 */
 	public void batchDraw(GL10 gl) {
@@ -370,7 +371,7 @@ public class SpriteBatcher implements Renderer {
 			int textureId) {
 		// Get bitmap
 		Bitmap bitmap = texture.getBitmap(context);
-		
+
 		// Working with textureId
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
 
@@ -398,7 +399,7 @@ public class SpriteBatcher implements Renderer {
 	/**
 	 * Returns the width of the drawing canvas in DIPS. Use this to scale your
 	 * sprites if you wish them to take up a proportion of the GLSurfaceView.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getViewWidth() {
@@ -408,7 +409,7 @@ public class SpriteBatcher implements Renderer {
 	/**
 	 * Returns the height of the drawing canvas in DIPS. Use this to scale your
 	 * sprites if you wish them to take up a proportion of the GLSurfaceView.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getViewHeight() {
@@ -419,7 +420,7 @@ public class SpriteBatcher implements Renderer {
 	 * Modify the default font params. Note this method should be called prior
 	 * to calling setRenderer(SpriteBatcher) on you GLSurfaceView otherwise the
 	 * new params may not be realised.
-	 * 
+	 *
 	 * @param params
 	 */
 	public void setFontParams(int resourceId, FontParams params) {
@@ -494,7 +495,7 @@ public class SpriteBatcher implements Renderer {
 
 	/**
 	 * Draw opaque white text.
-	 * 
+	 *
 	 * @param gl
 	 * @param resourceId
 	 *            Id of the string resource that contains the path of your font.
@@ -517,7 +518,7 @@ public class SpriteBatcher implements Renderer {
 
 	/**
 	 * Draw text with a non-default ARGB values.
-	 * 
+	 *
 	 * @param gl
 	 * @param resourceId
 	 *            Id of the string resource that contains the path of your font.
@@ -560,7 +561,7 @@ public class SpriteBatcher implements Renderer {
 
 	/**
 	 * ALPHA - Use at your own risk
-	 * 
+	 *
 	 * @param resourceId
 	 * @param src
 	 * @param x1
@@ -582,7 +583,7 @@ public class SpriteBatcher implements Renderer {
 
 	/**
 	 * ALPHA - Use at your own risk
-	 * 
+	 *
 	 * @param resourceId
 	 * @param src
 	 * @param offsetX
