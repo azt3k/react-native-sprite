@@ -48,12 +48,9 @@ public class Sprite extends GLSurfaceView implements Drawer {
         // this.getHolder().setFormat(PixelFormat.RGB_888);
         // this.setZOrderOnTop(false);
 
-
-        this.setEGLContextClientVersion(2);
         this.setZOrderOnTop(true);
         this.setEGLConfigChooser( 8, 8, 8, 8, 16, 0 );
-        this.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-
+        this.getHolder().setFormat( PixelFormat.TRANSPARENT );
     }
 
     @Override
@@ -126,21 +123,31 @@ public class Sprite extends GLSurfaceView implements Drawer {
                 float dr = (float)this.dW / this.dH;
                 int nW;
                 int nH;
+                int nT = 0;
+                int nL = 0;
+                int nR = 0;
+                int nB = 0;
 
                 // scale to width
                 if (sr > dr) {
                     nW = this.dW;
                     nH = Math.round(this.sH * ((float)nW / this.sW));
+                    nT = Math.round((float)(this.dH - nH) / 2);
+                    nR = nW;
+                    nB = nH + nT;
                 }
 
                 // scale to height
                 else {
                     nH = this.dH;
                     nW = Math.round(this.sW * ((float)nH / this.sH));
+                    nL = Math.round((float)(this.dW - nW) / 2);
+                    nR = nW + nL;
+                    nB = nH;
                 }
 
                 // set the dest rect
-                this.destRect = new Rect(0, 0, nW, nH);
+                this.destRect = new Rect(nL, nT, nR, nB);
                 break;
         }
     }
