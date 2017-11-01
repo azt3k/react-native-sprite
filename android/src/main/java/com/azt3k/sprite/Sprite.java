@@ -8,6 +8,9 @@ import android.opengl.GLSurfaceView;
 import android.graphics.PixelFormat;
 import android.util.Log;
 
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.twicecircled.spritebatcher.Drawer;
 import com.twicecircled.spritebatcher.SpriteBatcher;
 
@@ -214,6 +217,11 @@ public class Sprite extends GLSurfaceView implements Drawer {
         this.resourceIds = r;
         this.count = count;
         this._renderer = new SpriteBatcher(this._context, this.resourceIds, this);
+
+        // emit loaded event
+        ReactContext cntx = (ReactContext) this.getContext();
+        cntx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit("spriteLoaded", true);
 
         // set renderer
         this.setRenderer(this._renderer);

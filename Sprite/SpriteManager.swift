@@ -20,6 +20,8 @@ class SpriteManager : RCTViewManager {
 
       // The first parameter is not named, but the second one requires a name. Whatever!
       view.createSequence(nameWithPath, count:count, format:format, duration:duration );
+
+      self.bridge!.eventDispatcher().sendAppEvent(withName: "spriteLoaded", body: true);
     }
   }
 
