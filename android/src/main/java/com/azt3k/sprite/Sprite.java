@@ -37,6 +37,7 @@ public class Sprite extends GLSurfaceView implements Drawer {
     private boolean animated;
     private double duration;
     private int count = 0;
+    private boolean eventSent = false;
 
     public Sprite(Context context) {
 
@@ -67,6 +68,17 @@ public class Sprite extends GLSurfaceView implements Drawer {
             this.sourceRect,
             this.destRect
         );
+
+        if (!eventSent) {
+
+            // emit loaded event
+            ReactContext cntx = (ReactContext) this.getContext();
+            cntx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit("spriteLoaded", true);
+
+            // dont do this again
+            eventSent = true;
+        }
     }
 
     @Override
@@ -217,11 +229,6 @@ public class Sprite extends GLSurfaceView implements Drawer {
         this.resourceIds = r;
         this.count = count;
         this._renderer = new SpriteBatcher(this._context, this.resourceIds, this);
-
-        // emit loaded event
-        ReactContext cntx = (ReactContext) this.getContext();
-        cntx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit("spriteLoaded", true);
 
         // set renderer
         this.setRenderer(this._renderer);
